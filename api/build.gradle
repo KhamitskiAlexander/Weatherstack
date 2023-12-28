@@ -18,21 +18,3 @@ repositories {
 dependencies {
     implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.0.0'
 }
-
-task allure_env() {
-    doLast {
-        def allureInfo = [
-                'cucumber.tags': System.getProperty('cucumber.tags', 'undefined')
-        ]
-        copy {
-            from file("$projectDir/src/test/resources/environment.properties")
-            into file("$projectDir/build/allure-results")
-        }
-        File envs = file("$projectDir/build/allure-results/environment.properties")
-        def allureProps = new Properties()
-        allureProps.load(envs.newDataInputStream())
-        allureProps.putAll(allureInfo)
-        allureProps.store(envs.newWriter(), null)
-        envs.with { it.text = it.readLines().findAll { it }.sort().join('\n') }
-    }
-}
