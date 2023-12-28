@@ -1,0 +1,93 @@
+subprojects {
+
+    task tests(type: Test) {
+        doFirst {
+            javaexec {
+                /**
+                 * DO NOT WRITE HERE systemProperties += System.properties
+                 */
+                systemProperties['selenoid.enable'] = System.getProperty("selenoid.enable", 'false')
+                systemProperties['selenoid.video'] = System.getProperty("selenoid.video", 'false')
+                systemProperties['selenoid.remote'] = System.getProperty("selenoid.remote", "http://127.0.0.1:4444/wd/hub")
+                systemProperties['browser'] = System.getProperty("browser", 'chrome')
+                systemProperties['browser.resolution'] = System.getProperty("browser.resolution", '1366x768')
+                systemProperties['host'] = System.getProperty("host", 'https://www.int.free2move.com/')
+                systemProperties['env'] = System.getProperty("env", 'DEV')
+                classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+                main = "io.cucumber.core.cli.Main"
+                ignoreExitValue = false
+                args =
+                        [
+                                '--plugin', 'io.qameta.allure.cucumber6jvm.AllureCucumber6Jvm',
+                                '--plugin', 'rerun:build/failed_scenarios.txt',
+                                '--plugin', 'pretty',
+                                '--glue', 'io.automation', 'src/test/resources/features/',
+                                '--threads', System.getProperty('threads', '1'),
+                                '--tags', System.getProperty('cucumber.tags', 'undefined')
+                        ]
+            }
+        }
+        doLast {
+            String text = file("$projectDir/build/failed_scenarios.txt").getText("UTF-8")
+                    .replaceAll(
+                            "file:src/test/resources/features/",
+                            "file:$projectDir/src/test/resources/features/"
+                    )
+            File file = file("$projectDir/build/failed_scenarios.txt")
+            file.setText(text)
+        }
+    }
+
+    task retry(type: Test) {
+        doFirst {
+            def attempts = System.getProperty("cucumber.retry.attempts", "2").toInteger()
+            for (int i = 0; i < attempts; i++) {
+                def fails_appears = new File("$projectDir/build/failed_scenarios.txt").size() > 0
+                if (fails_appears) {
+                    javaexec {
+                        /**
+                         * DO NOT WRITE HERE systemProperties += System.properties
+                         */
+                        systemProperties['selenoid.enable'] = System.getProperty("selenoid.enable", 'false')
+                        systemProperties['selenoid.video'] = System.getProperty("selenoid.video", 'true')
+                        systemProperties['selenoid.remote'] = System.getProperty("selenoid.remote", "http://127.0.0.1:4444/wd/hub")
+                        systemProperties['browser'] = System.getProperty("browser", 'chrome')
+                        systemProperties['browser.resolution'] = System.getProperty("browser.resolution", '1366x768')
+                        systemProperties['host'] = System.getProperty("host", 'https://www.int.free2move.com/')
+                        systemProperties['env'] = System.getProperty("env", 'DEV')
+                        ignoreExitValue = false
+                        classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+                        main = "io.cucumber.core.cli.Main"
+                        args =
+                                [
+                                        '--plugin', 'io.qameta.allure.cucumber6jvm.AllureCucumber6Jvm',
+                                        '--plugin', 'rerun:build/failed_scenarios.txt',
+                                        '--glue', 'io.automation',
+                                        '--plugin', 'pretty',
+                                        '@' + projectDir + '/build/failed_scenarios.txt',
+                                        '--threads', '1'
+                                ]
+                    }
+                    String text = file("$projectDir/build/failed_scenarios.txt").getText("UTF-8")
+                            .replaceAll(
+                                    "file:src/test/resources/features/",
+                                    "file:$projectDir/src/test/resources/features/"
+                            )
+                    File file = file("$projectDir/build/failed_scenarios.txt")
+                    file.setText(text)
+
+                }
+            }
+        }
+    }
+
+    tasks.withType(Test) {
+        systemProperty('threads', '1')
+        systemProperty('file.encoding', "UTF-8")
+        systemProperty('BUILD_URL', System.getenv()['BUILD_URL'])
+        jvmArgs = ['-ea', '-Xmx3g']
+        systemProperties += System.properties
+    }
+}
+
+task allTests(dependsOn: ['clean']) {}
