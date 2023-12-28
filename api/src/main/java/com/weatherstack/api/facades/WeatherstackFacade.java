@@ -1,4 +1,4 @@
-package com.weatherstack.api.utils;
+package com.weatherstack.api.facades;
 
 import com.weatherstack.api.client.helpers.RequestHelper;
 import com.weatherstack.api.endpoints.Endpoints;

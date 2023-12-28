@@ -1,19 +1,38 @@
 plugins {
-    id 'java'
+    id 'io.qameta.allure'
 }
 
-group 'com.weatherstack'
-version '1.0-SNAPSHOT'
+allure {
+    version = '2.19.0'
+    report {
+        reportDir = file(layout.buildDirectory)
+    }
+}
 
 repositories {
-    mavenCentral()
+    flatDir {
+        dirs "$projectDir/libs"
+    }
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.0.0'
 }
 
-test {
-    useJUnitPlatform()
+task allure_env() {
+    doLast {
+        def allureInfo = [
+                'cucumber.tags': System.getProperty('cucumber.tags', 'undefined')
+        ]
+        copy {
+            from file("$projectDir/src/test/resources/environment.properties")
+            into file("$projectDir/build/allure-results")
+        }
+        File envs = file("$projectDir/build/allure-results/environment.properties")
+        def allureProps = new Properties()
+        allureProps.load(envs.newDataInputStream())
+        allureProps.putAll(allureInfo)
+        allureProps.store(envs.newWriter(), null)
+        envs.with { it.text = it.readLines().findAll { it }.sort().join('\n') }
+    }
 }

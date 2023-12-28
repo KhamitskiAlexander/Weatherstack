@@ -1,9 +1,9 @@
-package io.automation.api.client.helpers;
-
-import io.restassured.response.Response;
-import org.apache.commons.collections.map.HashedMap;
+package com.weatherstack.api.client.helpers;
 
 import java.util.Map;
+
+import io.restassured.response.Response;
+import org.apache.commons.collections4.map.HashedMap;
 
 public class ResponseHelper {
     private static final Map<String, Response> responseHolder = new HashedMap();

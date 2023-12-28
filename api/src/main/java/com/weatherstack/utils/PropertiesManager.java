@@ -1,4 +1,4 @@
-package by.onliner.utils;
+package com.weatherstack.utils;
 
 import java.io.FileInputStream;
 import java.io.IOException;

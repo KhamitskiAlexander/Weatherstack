@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import static java.lang.Thread.sleep;
 
-public class SearchSteps {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SearchSteps.class);
+public class WeatherstackSteps {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WeatherstackSteps.class);
     private final String scenarioName = ScenarioStorage.currentScenarioName();
     private String conditions;
     private String location;

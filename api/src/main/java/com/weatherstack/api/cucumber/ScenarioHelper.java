@@ -1,4 +1,4 @@
-package io.automation.api.cucumber;
+package com.weatherstack.api.cucumber;
 
 import java.util.List;
 

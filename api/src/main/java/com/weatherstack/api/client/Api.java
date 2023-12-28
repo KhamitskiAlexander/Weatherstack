@@ -1,4 +1,7 @@
-package io.automation.api.client;
+package com.weatherstack.api.client;
+
+import java.time.Duration;
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
@@ -8,9 +11,6 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;
-
-import java.time.Duration;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static io.restassured.RestAssured.given;
 import static java.time.Duration.ofSeconds;

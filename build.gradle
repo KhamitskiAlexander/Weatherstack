@@ -1,19 +1,22 @@
 plugins {
-    id 'java'
+    id 'io.qameta.allure' version '2.11.2' apply false
 }
 
-group 'com.weatherstack'
-version '1.0-SNAPSHOT'
-
-repositories {
-    mavenCentral()
+allprojects {
+    group = 'io.automation'
+    version = '1.0.0'
 }
 
-dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'java-library'
+
+    task wrapper(type: Wrapper) {
+        gradleVersion = '8.3'
+    }
 }
 
-test {
-    useJUnitPlatform()
-}
+apply from: 'gradle/dependencies.gradle'
+apply from: 'gradle/tests.gradle'
+
+defaultTasks 'check'

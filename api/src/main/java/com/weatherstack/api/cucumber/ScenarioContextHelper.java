@@ -1,12 +1,12 @@
-package io.automation.api.cucumber;
-
-import org.apache.commons.collections.map.HashedMap;
+package com.weatherstack.api.cucumber;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.commons.collections4.map.HashedMap;
+
 public class ScenarioContextHelper {
-    private static final Map<String, Object> SCENARION_CONTEXT = new HashedMap();
+    private static final Map<String, Object> SCENARION_CONTEXT = new HashedMap<>();
     private static final String UPDATED_SCENARIO_PREFIX = ScenarioStorage.currentScenarioName() + "__";
 
     public static void save(String key, Object object) {
