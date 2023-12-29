@@ -10,13 +10,14 @@ import static com.weatherstack.api.client.Api.doGetUntilSucceeded;
 
 public class WeatherstackFacade {
 
-    public static Response getWeatherForecast(String query) {
+    public static Response getWeatherForecast(final String endpoint, final String accessKey, final String query) {
         PropertiesManager propertiesManager = new PropertiesManager();
+        final String access_key = accessKey.equals("valid") ? propertiesManager.get("access_key") : propertiesManager.get("invalid_access_key");
         final RequestSpecification requestSpecification = RequestHelper.getDefaultRequestSpecification()
-                .queryParams("access_key", propertiesManager.get("access_key"))
+                .queryParams("access_key", access_key)
                 .queryParams("query", query)
                 .baseUri(Endpoints.BASE_URL)
-                .basePath(Endpoints.CURRENT);
+                .basePath(endpoint);
         return doGetUntilSucceeded(requestSpecification);
     }
 }
