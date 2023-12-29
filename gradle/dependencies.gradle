@@ -6,6 +6,7 @@ ext {
   assertj = '3.23.1'
   allure = '2.23.0'
   slf4j = '2.0.0'
+  json = '20220320'
   junit = '4.13.2'
   awaitility = '4.2.0'
 }
@@ -29,6 +30,7 @@ subprojects {
     implementation group: 'io.rest-assured', name: 'rest-assured', version: "$rest_assured"
     implementation group: 'io.cucumber', name: 'cucumber-java', version: "$cucumber"
     implementation group: 'org.assertj', name: 'assertj-core', version: "$assertj"
+    implementation group: 'org.json', name: 'json', version: "$json"
     implementation group: 'junit', name: 'junit', version: "$junit"
     implementation group: 'org.slf4j', name: 'slf4j-api', version: "$slf4j"
     implementation group: 'org.slf4j', name: 'slf4j-simple', version: "$slf4j"
